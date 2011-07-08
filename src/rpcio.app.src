@@ -1,0 +1,16 @@
+{application, rpcio,
+ [
+  {description, "Execute Erlang functions remotely using http://socket.io"},
+  {vsn, "0.1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib,
+                  crypto,
+                  inets,
+                  elog,
+                  socketio
+                 ]},
+  {mod, {rpcio, []}},
+  {env, []}
+ ]}.

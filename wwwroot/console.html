@@ -1,0 +1,46 @@
+<html>
+  <head>
+    <meta HTTP-equiv="X-UA-Compatible" content="IE=EDGE">
+
+    <!--[if lt IE 8]>
+    <script src="js/json2.js"></script>
+    <style type="text/css">@import "styles/ie8.css";</style>
+    <![endif]-->
+
+    <script src="js/socket.io.js"></script>
+
+    <script type="text/javascript">
+      function connect(port) {
+    	  document.getElementById("results").innerHTML = "Connecting to port " + port.toString() + "<br />";
+    	  socket = new io.Socket(location.hostname, {port:port});
+    	  socket.on('message', function(data){
+    		  if(typeof data == "string")
+    			  document.getElementById("results").innerHTML += data + "</br />";
+  			  else if(data.error)
+  				  alert(JSON.stringify(data.desc));
+  			  else
+  				  document.getElementById("results").innerHTML += JSON.stringify(data.result) + "<br />";
+    		  });
+    	  socket.on('connect', function(){
+    		  document.getElementById("results").innerHTML += "connected!</br />";
+    		  });
+    	  socket.connect();
+      };
+      function exec(cmd) {
+    	  socket.send({"cmd":cmd})
+      }
+    </script>
+  </head>
+  <body>
+    <label for="txtPort">Port: 
+    <input type="text" id="txtPort" value="8001" /></label>
+    <input type="button" onclick="connect(parseInt(txtPort.value, 10))" value="Connect" />
+    <input type="button" onclick="socket.disconnect()" value="Disconnect" />
+    <label for="txtCmd">Cmd: 
+    <input type="text" id="txtCmd" value="erlang:now()" /></label>
+    <input type="button" onclick="exec(txtCmd.value)" value="Exec" />
+    <p id="results" style="width:80%">
+      Results will appear here...<br />
+    </p>
+  </body>
+</html>
