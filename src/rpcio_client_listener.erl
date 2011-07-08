@@ -78,9 +78,12 @@ terminate(Reason, #state{port = Port}) ->
 code_change(_OldVsn, State, _Extra) -> {ok, State}.
 
 %% @private
--spec handle_request(atom(), [proplists:property()], term()) -> term().
+-spec handle_request(atom(), [string()], term()) -> term().
+handle_request('GET', [], Req) ->
+  handle_request('GET', ["console.html"], Req);
 handle_request('GET', Path, Req) ->
-  Req:file(filename:join("wwwroot", Path));
+  ?INFO("~p~n", [Path]),
+  Req:file(filename:join(["wwwroot"| Path]));
 handle_request(Method, Path, Req) ->
   ?WARN("~p: ~s~n\t~p~n", [Method, string:join(Path, "/"), Req]),
   Req:respond(405). %% Method not allowed
